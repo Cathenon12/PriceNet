@@ -57,13 +57,20 @@ export default function Index() {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300" />
               </a>
             </div>
-            <a
-              href="https://github.com"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-200 hover:scale-105"
-            >
-              <Github className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm font-medium">Code</span>
-            </a>
+            <div className="flex items-center gap-4">
+              <a
+                href="/login"
+                className="hidden sm:inline-flex px-4 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors"
+              >
+                Connexion
+              </a>
+              <a
+                href="/signup"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 font-medium text-sm"
+              >
+                Inscription
+              </a>
+            </div>
           </div>
         </div>
       </nav>
