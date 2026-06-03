@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, Zap, Shield, TrendingDown, Github, ExternalLink, ChevronRight, Sparkles } from "lucide-react";
 
 export default function Index() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
 
@@ -16,10 +17,8 @@ export default function Index() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery("");
     }
   };
 
@@ -108,20 +107,10 @@ export default function Index() {
               </div>
               <button
                 type="submit"
-                disabled={isLoading}
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:shadow-xl hover:shadow-blue-600/30 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:shadow-xl hover:shadow-blue-600/30 hover:scale-105 transition-all duration-300 whitespace-nowrap"
               >
-                {isLoading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Recherche...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="w-5 h-5" />
-                    Comparer
-                  </>
-                )}
+                <Zap className="w-5 h-5" />
+                Comparer
               </button>
             </div>
           </form>
