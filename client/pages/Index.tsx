@@ -1,15 +1,22 @@
-import { useState } from "react";
-import { Search, Zap, Shield, TrendingDown, Github, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Zap, Shield, TrendingDown, Github, ExternalLink, ChevronRight, Sparkles } from "lucide-react";
 
 export default function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       setIsLoading(true);
-      // Simulate API call
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
@@ -17,13 +24,20 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      {/* Animated Background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-300/20 dark:bg-blue-600/10 rounded-full blur-3xl" style={{ transform: `translateY(${scrollY * 0.3}px)` }} />
+        <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-300/20 dark:bg-purple-600/10 rounded-full blur-3xl" style={{ transform: `translateY(${scrollY * 0.4}px)` }} />
+        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-300/20 dark:bg-pink-600/10 rounded-full blur-3xl" style={{ transform: `translateY(${scrollY * -0.2}px)` }} />
+      </div>
+
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md">
+      <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrollY > 10 ? 'bg-white/90 dark:bg-slate-950/90 border-b border-slate-200 dark:border-slate-800' : 'bg-transparent'} backdrop-blur-xl`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg">
+            <div className="flex items-center gap-3 group cursor-pointer">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl group-hover:shadow-lg group-hover:shadow-blue-600/25 transition-all">
                 <TrendingDown className="w-6 h-6 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -31,190 +45,204 @@ export default function Index() {
               </span>
             </div>
             <div className="hidden sm:flex items-center gap-8">
-              <a href="#features" className="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors">
+              <a href="#features" className="relative text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium text-sm group">
                 Features
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300" />
               </a>
-              <a href="#security" className="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors">
+              <a href="#security" className="relative text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium text-sm group">
                 Security
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300" />
               </a>
-              <a href="#tech" className="text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors">
+              <a href="#tech" className="relative text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium text-sm group">
                 Tech Stack
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300" />
               </a>
             </div>
             <a
               href="https://github.com"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-200 hover:scale-105"
             >
               <Github className="w-5 h-5" />
-              <span className="hidden sm:inline">Code</span>
+              <span className="hidden sm:inline text-sm font-medium">Code</span>
             </a>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-20 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative py-20 sm:py-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 mb-8">
-            <Zap className="w-4 h-4" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100/50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 mb-8 border border-blue-200 dark:border-blue-500/20 backdrop-blur-sm hover:bg-blue-100/70 dark:hover:bg-blue-500/15 transition-all duration-300">
+            <Sparkles className="w-4 h-4" />
             <span className="text-sm font-semibold">Production-Ready Price Comparison Engine</span>
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
-            Smart Price{" "}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
+            Trouvez les meilleurs{" "}
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Comparison
+              prix
             </span>
             <br />
-            Made Simple
+            en toute confiance
           </h1>
 
           {/* Subheading */}
-          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Compare prices across multiple e-commerce platforms in real-time. AI-powered insights, advanced scraping,
-            and built-in security for the modern web.
+          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
+            Comparez les prix en temps réel sur plusieurs plateformes. Intelligence artificielle, sécurité avancée et expérience fluide.
           </p>
 
           {/* Search Bar */}
           <form onSubmit={handleSearch} className="mb-16">
-            <div className="relative flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto">
+            <div className="relative flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto group">
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products (e.g., Samsung Galaxy S24)..."
-                  className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                  placeholder="Samsung Galaxy S24, MacBook Pro, AirPods..."
+                  className="w-full pl-14 pr-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 dark:focus:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:shadow-lg hover:shadow-blue-600/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:shadow-xl hover:shadow-blue-600/30 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 whitespace-nowrap"
               >
-                {isLoading ? "Searching..." : "Compare Now"}
+                {isLoading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Recherche...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-5 h-5" />
+                    Comparer
+                  </>
+                )}
               </button>
             </div>
           </form>
 
           {/* Quick Links */}
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3 items-center">
+            <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">Populaires:</span>
             {["Smartphones", "Laptops", "Headphones"].map((category) => (
               <button
                 key={category}
-                className="px-4 py-2 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                className="px-5 py-2.5 rounded-full bg-slate-100/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:scale-105 backdrop-blur-sm"
               >
                 {category}
               </button>
             ))}
           </div>
         </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 -z-10 w-96 h-96 bg-blue-400/10 dark:bg-blue-600/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 -z-10 w-96 h-96 bg-purple-400/10 dark:bg-purple-600/10 rounded-full blur-3xl" />
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950">
+      <section id="features" className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
+            <div className="inline-block mb-4 px-4 py-2 rounded-full bg-blue-100/50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/20 text-sm font-semibold">
+              Caractéristiques principales
+            </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-              Enterprise-Grade Features
+              Puissance Enterprise
             </h2>
             <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              Built on modern technology stack with production-ready architecture and comprehensive security measures
+              Architecture production avec technologie moderne et mesures de sécurité complètes
             </p>
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="group p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Lightning Fast</h3>
-              <p className="text-slate-600 dark:text-slate-400">
-                Sub-200ms cache hits with asyncio-powered scraping. Real-time price updates via Redis broker.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Zap,
+                title: "Ultra Rapide",
+                description: "Réponses en moins de 200ms avec cache Redis. Extraction asynchrone temps réel.",
+                color: "from-blue-600 to-blue-400",
+                index: 0,
+              },
+              {
+                icon: Shield,
+                title: "Sécurisé",
+                description: "Cookies sécurisés, CSRF, rate limiting et protection anti-bot intelligent.",
+                color: "from-purple-600 to-purple-400",
+                index: 1,
+              },
+              {
+                icon: Sparkles,
+                title: "IA Intelligente",
+                description: "Hermes AI détecte les fausses promos et recommande les meilleures offres.",
+                color: "from-pink-600 to-pink-400",
+                index: 2,
+              },
+              {
+                icon: TrendingDown,
+                title: "Historique Complet",
+                description: "Suivi des prix stockés en PostgreSQL avec intégration MongoDB flexible.",
+                color: "from-emerald-600 to-emerald-400",
+                index: 3,
+              },
+              {
+                icon: ExternalLink,
+                title: "Multi-Magasins",
+                description: "Jumia, Amazon et autres plateformes avec extraction intelligente.",
+                color: "from-orange-600 to-orange-400",
+                index: 4,
+              },
+              {
+                icon: Zap,
+                title: "Disponibilité 99.9%",
+                description: "Workers distribués, queue de tâches et failover automatique.",
+                color: "from-cyan-600 to-cyan-400",
+                index: 5,
+              },
+            ].map(({ icon: Icon, title, description, color, index }) => (
+              <div
+                key={index}
+                onMouseEnter={() => setHoveredFeature(index)}
+                onMouseLeave={() => setHoveredFeature(null)}
+                className="group relative p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/30 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-slate-900/50 transition-all duration-300 hover:-translate-y-1"
+              >
+                {/* Gradient Background */}
+                <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-5 bg-gradient-to-br ${color} transition-opacity duration-300`} />
 
-            {/* Feature 2 */}
-            <div className="group p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-purple-300 dark:hover:border-purple-700 hover:shadow-lg transition-all">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Shield className="w-6 h-6 text-white" />
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-5 group-hover:shadow-lg group-hover:shadow-current/25 transition-all duration-300 ${hoveredFeature === index ? "scale-110" : ""}`}>
+                  <Icon className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300">
+                  {title}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {description}
+                </p>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Fortified Security</h3>
-              <p className="text-slate-600 dark:text-slate-400">
-                Dynamic user agents, secure cookies, CSRF protection, and rate limiting against bot attacks.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="group p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-pink-300 dark:hover:border-pink-700 hover:shadow-lg transition-all">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-pink-600 to-pink-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Search className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">AI-Powered Insights</h3>
-              <p className="text-slate-600 dark:text-slate-400">
-                Hermes AI model analyzes offers, detects fake promotions, and provides intelligent recommendations.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="group p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg transition-all">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-600 to-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <TrendingDown className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Price Tracking</h3>
-              <p className="text-slate-600 dark:text-slate-400">
-                Historical price data stored in PostgreSQL with MongoDB integration for flexible querying.
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="group p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-lg transition-all">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-600 to-orange-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <ExternalLink className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Multi-Store Coverage</h3>
-              <p className="text-slate-600 dark:text-slate-400">
-                Scrape from Jumia, Amazon, and other e-commerce platforms with intelligent extraction.
-              </p>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="group p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-cyan-300 dark:hover:border-cyan-700 hover:shadow-lg transition-all">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-600 to-cyan-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">99.9% Uptime SLA</h3>
-              <p className="text-slate-600 dark:text-slate-400">
-                Distributed workers, background job queue, and failover mechanisms for maximum reliability.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Tech Stack Section */}
-      <section id="tech" className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <section id="tech" className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
+            <div className="inline-block mb-4 px-4 py-2 rounded-full bg-purple-100/50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-500/20 text-sm font-semibold">
+              Stack technologique
+            </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-              Modern Tech Stack
+              Technologie Moderne
             </h2>
             <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              Built with industry-leading technologies for scalability and performance
+              Construit avec les technologies les plus fiables pour la scalabilité et performance
             </p>
           </div>
 
           {/* Tech Stack Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {[
               { name: "FastAPI", emoji: "⚡" },
               { name: "MongoDB", emoji: "🐘" },
@@ -229,10 +257,12 @@ export default function Index() {
             ].map((tech) => (
               <div
                 key={tech.name}
-                className="p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 hover:shadow-lg transition-shadow text-center"
+                className="group relative p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/30 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
               >
-                <div className="text-4xl mb-3">{tech.emoji}</div>
-                <h3 className="font-semibold text-slate-900 dark:text-white">{tech.name}</h3>
+                <div className="flex flex-col items-center justify-center gap-3 relative z-10">
+                  <div className="text-5xl group-hover:scale-125 transition-transform duration-300">{tech.emoji}</div>
+                  <h3 className="font-semibold text-slate-900 dark:text-white text-sm">{tech.name}</h3>
+                </div>
               </div>
             ))}
           </div>
@@ -240,59 +270,68 @@ export default function Index() {
       </section>
 
       {/* Security Section */}
-      <section id="security" className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950">
+      <section id="security" className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-                Security First
-              </h2>
-              <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-                PriceNet V2 implements enterprise-grade security measures to protect against common web vulnerabilities
-                and bot attacks.
-              </p>
+          <div className="mb-20 text-center">
+            <div className="inline-block mb-4 px-4 py-2 rounded-full bg-emerald-100/50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/20 text-sm font-semibold">
+              Protection avancée
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-6">
+              Sécurité en priorité
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Mesures de sécurité enterprise-grade contre les vulnérabilités web et attaques bot
+            </p>
+          </div>
 
-              <ul className="space-y-4">
-                {[
-                  "Secure HTTP-only cookies with SameSite attributes",
-                  "CSRF token protection on all state-changing operations",
-                  "Rate limiting and IP-based blocking",
-                  "Dynamic user agent rotation for ethical scraping",
-                  "Request validation with Pydantic schemas",
-                  "SQL injection prevention via ORM and parameterized queries",
-                  "XSS protection with output encoding",
-                  "Environment-based configuration for secrets",
-                ].map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0 mt-1">
-                      <span className="text-green-600 dark:text-green-400 font-bold text-sm">✓</span>
-                    </div>
-                    <span className="text-slate-700 dark:text-slate-300">{item}</span>
-                  </li>
-                ))}
-              </ul>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-5">
+              {[
+                "Cookies HTTP-only sécurisés avec SameSite",
+                "Protection CSRF sur toutes les opérations",
+                "Rate limiting et blocage par IP",
+                "Rotation dynamique des user agents",
+                "Validation avec schémas Pydantic",
+                "Prévention des injections SQL",
+                "Protection XSS avec encodage",
+                "Configuration des secrets en variables",
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start gap-4 group">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-400 flex items-center justify-center flex-shrink-0 group-hover:shadow-lg group-hover:shadow-emerald-600/30 transition-all duration-300">
+                    <span className="text-white font-bold text-sm">✓</span>
+                  </div>
+                  <span className="text-slate-700 dark:text-slate-300 font-medium pt-0.5 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{item}</span>
+                </div>
+              ))}
             </div>
 
-            <div className="relative">
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-                <h3 className="text-2xl font-bold mb-6">Development & Production Modes</h3>
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl p-10 text-white shadow-xl hover:shadow-2xl transition-all duration-300">
+                <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                  <span className="text-3xl">⚙️</span>
+                  Modes Dev & Prod
+                </h3>
                 <div className="space-y-6">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-blue-100">🔧 Development</h4>
-                    <p className="text-sm text-blue-100">
-                      Debug logging, mock data, relaxed CORS for testing, verbose error messages
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
+                    <h4 className="font-semibold mb-2 text-blue-100 flex items-center gap-2">
+                      🔧 Développement
+                    </h4>
+                    <p className="text-sm text-blue-100/90">
+                      Logs détaillés, données mock, CORS relaxé, messages d'erreur verbeux
                     </p>
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-blue-100">🚀 Production</h4>
-                    <p className="text-sm text-blue-100">
-                      Hardened security headers, rate limiting enabled, minimal logging, error masking
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
+                    <h4 className="font-semibold mb-2 text-blue-100 flex items-center gap-2">
+                      🚀 Production
+                    </h4>
+                    <p className="text-sm text-blue-100/90">
+                      Headers sécurisés, rate limiting actif, logs minimaux, masquage d'erreurs
                     </p>
                   </div>
                   <div className="pt-4 border-t border-blue-400/30">
                     <p className="text-sm text-blue-100">
-                      Switch between modes via <code className="bg-blue-700/30 px-2 py-1 rounded">ENVIRONMENT</code>{" "}
-                      variable
+                      Basculer via la variable <code className="bg-blue-700/40 px-3 py-1.5 rounded-lg font-mono text-blue-50 inline-block">ENVIRONMENT</code>
                     </p>
                   </div>
                 </div>
@@ -303,113 +342,77 @@ export default function Index() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
+      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 -z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-purple-600/80 to-pink-600/80 -z-10" />
+
         <div className="max-w-4xl mx-auto text-center text-white">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6">Ready to Compare?</h2>
-          <p className="text-lg text-blue-100 mb-10 max-w-2xl mx-auto">
-            Start comparing prices across multiple e-commerce platforms with AI-powered insights
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight">
+            Prêt à economiser?
+          </h2>
+          <p className="text-lg sm:text-xl text-blue-100 mb-12 max-w-2xl mx-auto leading-relaxed">
+            Commencez à comparer les prix sur plusieurs plateformes avec recommendations IA
           </p>
-          <button className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-blue-600 font-semibold hover:shadow-lg transition-all hover:scale-105">
-            <Search className="w-5 h-5" />
-            Start Searching
+          <button className="inline-flex items-center gap-3 px-10 py-4 rounded-2xl bg-white text-blue-600 font-bold hover:shadow-2xl hover:shadow-blue-900/50 transition-all duration-300 hover:scale-110 group">
+            <Search className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+            <span>Commencer maintenant</span>
+            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+      <footer className="py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/50 backdrop-blur">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Security
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Developers</h4>
-              <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    API Docs
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Status
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Terms
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-600 transition-colors">
-                    Cookies
-                  </a>
-                </li>
-              </ul>
-            </div>
+            {[
+              {
+                title: "Produit",
+                links: ["Caractéristiques", "Tarifs", "Sécurité"],
+              },
+              {
+                title: "Développeurs",
+                links: ["API Docs", "GitHub", "Status"],
+              },
+              {
+                title: "Entreprise",
+                links: ["À propos", "Blog", "Contact"],
+              },
+              {
+                title: "Juridique",
+                links: ["Confidentialité", "Conditions", "Cookies"],
+              },
+            ].map((section, idx) => (
+              <div key={idx}>
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-4">{section.title}</h4>
+                <ul className="space-y-2.5">
+                  {section.links.map((link, linkIdx) => (
+                    <li key={linkIdx}>
+                      <a
+                        href="#"
+                        className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 font-medium"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
 
           <div className="border-t border-slate-200 dark:border-slate-800 pt-8">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <TrendingDown className="w-5 h-5 text-blue-600" />
-                <span className="font-semibold text-slate-900 dark:text-white">PriceNet V2</span>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-3 group cursor-pointer">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:shadow-lg transition-all">
+                  <TrendingDown className="w-6 h-6 text-white" />
+                </div>
+                <span className="font-bold text-slate-900 dark:text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all">
+                  PriceNet V2
+                </span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                © 2024 PriceNet. Built with modern technologies.
+                © 2024 PriceNet. Construit avec les technologies modernes.
               </p>
             </div>
           </div>
